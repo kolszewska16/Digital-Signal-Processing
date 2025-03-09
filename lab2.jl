@@ -103,3 +103,52 @@ function sierpinski_area(N)
 end
 
 sierpinski_area(4)
+
+# problem 2.8
+function newton(a)
+    eps = 0.0000000001
+    iter = 1000
+
+    if(a < 0)
+        println("error")
+    elseif(a == 0)
+        return 0
+    else
+        xk = 1
+        for i = 1:iter
+            xk1 = 0.5 * (xk + a / xk)
+
+            if(abs(xk1 - xk) <= eps)
+                return xk1
+            end
+
+            xk = xk1
+        end
+    end
+end
+
+newton(3)
+newton(16)
+
+# problem 2.10
+function sum_of_fifth_power()
+    limit = 6 * 9^5
+    total = 0
+    num = []
+    for i = 10:limit
+        digits = [parse(Int, d) for d in string(i)]
+
+        power_sum = 0
+        for d in digits
+            power_sum += d^5
+        end
+
+        if(power_sum == i)
+            total += i
+            append!(num, i)
+        end
+    end
+    return total
+end
+
+sum_of_fifth_power()
