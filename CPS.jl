@@ -34,7 +34,7 @@ end
 ###############################################################################
 # Modelowanie sygnałów                                                        #
 ###############################################################################
-ci_rectangular(t::Real; T::Real=1.0)::Real = (abs(t) <= T / 2) ? 1.0 : 0.0
+ci_rectangular(t::Real; T::Real=1.0)::Real = (abs(t) < T / 2) ? 1.0 : ((abs(t) == T / 2) ? 0.5 : 0.0)
 ci_triangle(t::Real; T::Real=1.0)::Real = (abs(t) < T) ? (1 - abs(t)) : 0.0
 ci_literka_M(t::Real; T=1.0)::Real = (abs(t) <= T / 2) ? (abs(t) + 0.5) : 0.0
 ci_literka_U(t::Real; T=1.0)::Real = (abs(t) <= T / 2) ? (4 * t^2) : 0.0
