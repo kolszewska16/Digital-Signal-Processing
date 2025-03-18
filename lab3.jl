@@ -73,15 +73,16 @@ complex_white_noise()
 
 # problem 3.5
 function ci_rectangular(t::Real; T::Real=1.0)::Real
-    v = 1.0
-    if(abs(t) <= T / 2)
-        return v
+    if(abs(t) < T / 2)
+        return 1.0
+    elseif(abs(t) == T / 2)
+        return 0.5
     else
         return 0.0
     end
 end
 
-# ci_rectangular(t::Real; T::Real=1.0)::Real = (abs(t) <= T / 2) ? 1.0 : 0.0
+# ci_rectangular(t::Real; T::Real=1.0)::Real = (abs(t) < T / 2) ? 1.0 : ((abs(t) == T / 2) ? 0.5 : 0.0)
 ci_rectangular(0.34)
 ci_rectangular(-0.62)
 
