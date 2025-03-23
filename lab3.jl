@@ -163,8 +163,7 @@ using CairoMakie
 x = -5:1:5
 println(x)
 y = kronecker.(x)
-# return y
-scatter(x, y)
+stem(x, y)
 
 # problem 3.23
 function heaviside(n::Integer)::Real
@@ -179,7 +178,7 @@ end
 using CairoMakie
 x = -5:1:5
 y = heaviside.(x)
-scatter(x, y)
+stem(x, y)
 
 # problem 3.24
 function rect(N::Integer)
@@ -201,17 +200,18 @@ lines(x, y)
 function triang(N::Integer)
     x = []
     for n = 0:(N - 1)
-        v = 1 - abs((n - (N - 1) / 2) / (N / 2))
+        v = 1 - abs((n - (N - 1) / 2) / ((N - 1) / 2))
         append!(x, v)
     end
     return x
 end
 
+# triang(N::Integer) = [1 - abs((n - (N - 1) / 2) / ((N - 1) / 2)) for n in 0:(N - 1)]
 using CairoMakie
-N = 1000
+N = 100
 x = 0:(N - 1)
 y = triang(N)
-lines(x, y)
+stem(x, y)
 
 # problem 3.26
 function hanning(N::Integer)
@@ -223,8 +223,49 @@ function hanning(N::Integer)
     return x
 end
 
+# hanning(N::Integer) = [0.5 * (1 - cos((2 * π * n) / (N - 1))) for n in 0:(N - 1)]
 using CairoMakie
-N = 1000
+N = 100
 x = 0:(N - 1)
 y = hanning(N)
-lines(x, y)
+stem(x, y)
+
+# problem 3.27
+function hamming(N::Integer)
+    α = 0.53836
+    β = 0.46164
+    x = []
+    for n = 0:(N - 1)
+        v = α - β * cos((2 * π * n) / (N - 1))
+        append!(x, v)
+    end
+    return x
+end
+
+# hamming(N::Integer) = [0.53836 - 0.46164 * cos((2 * π * n) / (N - 1)) for n in 0:(N - 1)]
+using  CairoMakie
+N = 100
+x = 0:(N - 1)
+y = hamming(N)
+stem(x, y)
+
+# problem 3.28
+function blackman(N::Integer)
+    α = 0.16
+    a0 = (1 - α) / 2
+    a1 = 0.5
+    a2 = α / 2
+    x = []
+    for n = 0:(N - 1)
+        v = a0 - a1 * cos((2 * π * n) / (N - 1)) + a2 * cos((4 * π * n) / (N - 1))
+        append!(x, v)
+    end
+    return x
+end
+
+# blackman(N::Integer) = [0.42 - 0.5 * cos((2 * π * n) / (N - 1)) + 0.08 * cos((4 * π * n) / (N - 1)) for n in 0:(N - 1)]
+using CairoMakie
+N = 100
+x = 0:(N - 1)
+y = blackman(N)
+stem(x, y)
