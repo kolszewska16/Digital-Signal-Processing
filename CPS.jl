@@ -11,7 +11,7 @@ const author = Dict(
 ###############################################################################
 # Parametry sygnałów                                                          #
 ###############################################################################
-mean(x::AbstractVector)::Number = missing
+mean(x::AbstractVector)::Number = sum(abs.(x) .* abs.(x)) / length(x)
 peak2peak(x::AbstractVector)::Real = maximum(x) - minimum(x)
 energy(x::AbstractVector)::Real = missing
 power(x::AbstractVector)::Real = missing
@@ -80,15 +80,15 @@ end
 
 
 
-kronecker(n::Integer)::Real = missing
-heaviside(n::Integer)::Real = missing
+kronecker(n::Integer)::Real = (n == 0) ? 1.0 : 0.0
+heaviside(n::Integer)::Real = (n >= 0) ? 1.0 : 0.0
 
 # Dyskretne okna czasowe
-rect(N::Integer) = missing
-triang(N::Integer) = missing
-hanning(N::Integer) = missing
-hamming(N::Integer) = missing
-blackman(N::Integer) = missing
+rect(N::Integer) = ones(N)
+triang(N::Integer) = [1 - abs((n - (N - 1) / 2) / ((N - 1) / 2)) for n in 0:(N - 1)]
+hanning(N::Integer) = [0.5 * (1 - cos((2 * π * n) / (N - 1))) for n in 0:(N - 1)]
+hamming(N::Integer) = [0.53836 - 0.46164 * cos((2 * π * n) / (N - 1)) for n in 0:(N - 1)]
+blackman(N::Integer) = [0.42 - 0.5 * cos((2 * π * n) / (N - 1)) + 0.08 * cos((4 * π * n) / (N - 1)) for n in 0:(N - 1)]
 
 function chebwin(N; α=-100)
     missing
@@ -107,7 +107,7 @@ end
 
 quantize(L::AbstractVector)::Function = missing
 SQNR(N::Integer)::Real = missing
-SNR(Psignal::Real, Pnoise::Real)::Real = missing
+SNR(Psignal::Real, Pnoise::Real)::Real = 10 * log10(Psignal / Pnoise)
 
 
 function interpolate(
