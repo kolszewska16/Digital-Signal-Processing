@@ -16,8 +16,6 @@ peak2peak(x::AbstractVector)::Real = maximum(x) - minimum(x)
 energy(x::AbstractVector)::Real = sum(abs.(x).^2)
 power(x::AbstractVector)::Real = sum(abs.(x).^2) / length(x)
 rms(x::AbstractVector)::Real = sqrt(sum(abs.(x).^2) / length(x))
-using Random
-power([randn() for i in 1:10])
 
 function running_mean(x::AbstractVector, M::Integer)::Vector
     N = length(x)
@@ -132,7 +130,7 @@ end
 ###############################################################################
 
 quantize(L::AbstractVector)::Function = missing
-SQNR(N::Integer)::Real = missing
+SQNR(N::Integer)::Real = (N > 0) ? 10 * log10(3 * 2^(2 * N)) : 0.0
 SNR(Psignal::Real, Pnoise::Real)::Real = 10 * log10(Psignal / Pnoise)
 
 
