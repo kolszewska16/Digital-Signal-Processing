@@ -182,14 +182,18 @@ stem(x, y)
 
 # problem 3.24
 function rect(N::Integer)
-    x = []
-    for i = 1:N
-        append!(x, 1.0)
+    if(N > 0)
+        x = []
+        for i = 1:N
+            append!(x, 1.0)
+        end
+        return x
+    else
+        return 0.0
     end
-    return x
 end
 
-# rect(N::Integer) = ones(N)
+# rect(N::Integer) = (N > 0) ? ones(N) : 0.0
 using CairoMakie
 N = 100
 x = 0:(N - 1)
@@ -198,15 +202,19 @@ lines(x, y)
 
 # problem 3.25
 function triang(N::Integer)
-    x = []
-    for n = 0:(N - 1)
-        v = 1 - abs((n - (N - 1) / 2) / ((N - 1) / 2))
-        append!(x, v)
+    if(N > 0)
+        x = []
+        for n = 0:(N - 1)
+            v = 1 - abs((n - (N - 1) / 2) / ((N - 1) / 2))
+            append!(x, v)
+        end
+        return x
+    else
+        return 0.0
     end
-    return x
 end
 
-# triang(N::Integer) = [1 - abs((n - (N - 1) / 2) / ((N - 1) / 2)) for n in 0:(N - 1)]
+# triang(N::Integer) = (N > 0) ? [1 - abs((n - (N - 1) / 2) / ((N - 1) / 2)) for n in 0:(N - 1)] : 0.0
 using CairoMakie
 N = 100
 x = 0:(N - 1)
@@ -215,15 +223,19 @@ stem(x, y)
 
 # problem 3.26
 function hanning(N::Integer)
-    x = []
-    for n = 0:(N - 1)
-        v = 0.5 * (1 - cos((2 * π * n) / (N - 1)))
-        append!(x, v)
+    if(N >  0)
+        x = []
+        for n = 0:(N - 1)
+            v = 0.5 * (1 - cos((2 * π * n) / (N - 1)))
+            append!(x, v)
+        end
+        return x
+    else 
+        return 0.0
     end
-    return x
 end
 
-# hanning(N::Integer) = [0.5 * (1 - cos((2 * π * n) / (N - 1))) for n in 0:(N - 1)]
+# hanning(N::Integer) = (N > 0) ? [0.5 * (1 - cos((2 * π * n) / (N - 1))) for n in 0:(N - 1)] : 0.0
 using CairoMakie
 N = 100
 x = 0:(N - 1)
@@ -234,15 +246,19 @@ stem(x, y)
 function hamming(N::Integer)
     α = 0.53836
     β = 0.46164
-    x = []
-    for n = 0:(N - 1)
-        v = α - β * cos((2 * π * n) / (N - 1))
-        append!(x, v)
+    if(N > 0)
+        x = []
+        for n = 0:(N - 1)
+            v = α - β * cos((2 * π * n) / (N - 1))
+            append!(x, v)
+        end
+        return x
+    else
+        return 0.0
     end
-    return x
 end
 
-# hamming(N::Integer) = [0.53836 - 0.46164 * cos((2 * π * n) / (N - 1)) for n in 0:(N - 1)]
+# hamming(N::Integer) = (N > 0) ? [0.53836 - 0.46164 * cos((2 * π * n) / (N - 1)) for n in 0:(N - 1)] : 0.0
 using  CairoMakie
 N = 100
 x = 0:(N - 1)
@@ -255,15 +271,19 @@ function blackman(N::Integer)
     a0 = (1 - α) / 2
     a1 = 0.5
     a2 = α / 2
-    x = []
-    for n = 0:(N - 1)
-        v = a0 - a1 * cos((2 * π * n) / (N - 1)) + a2 * cos((4 * π * n) / (N - 1))
-        append!(x, v)
+    if(N > 0)
+        x = []
+        for n = 0:(N - 1)
+            v = a0 - a1 * cos((2 * π * n) / (N - 1)) + a2 * cos((4 * π * n) / (N - 1))
+            append!(x, v)
+        end
+        return x
+    else
+        return 0.0
     end
-    return x
 end
 
-# blackman(N::Integer) = [0.42 - 0.5 * cos((2 * π * n) / (N - 1)) + 0.08 * cos((4 * π * n) / (N - 1)) for n in 0:(N - 1)]
+# blackman(N::Integer) = (N > 0) ? [0.42 - 0.5 * cos((2 * π * n) / (N - 1)) + 0.08 * cos((4 * π * n) / (N - 1)) for n in 0:(N - 1)] : 0.0
 using CairoMakie
 N = 100
 x = 0:(N - 1)

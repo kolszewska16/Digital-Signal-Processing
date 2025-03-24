@@ -84,11 +84,11 @@ kronecker(n::Integer)::Real = (n == 0) ? 1.0 : 0.0
 heaviside(n::Integer)::Real = (n >= 0) ? 1.0 : 0.0
 
 # Dyskretne okna czasowe
-rect(N::Integer) = ones(N)
-triang(N::Integer) = [1 - abs((n - (N - 1) / 2) / ((N - 1) / 2)) for n in 0:(N - 1)]
-hanning(N::Integer) = [0.5 * (1 - cos((2 * π * n) / (N - 1))) for n in 0:(N - 1)]
-hamming(N::Integer) = [0.53836 - 0.46164 * cos((2 * π * n) / (N - 1)) for n in 0:(N - 1)]
-blackman(N::Integer) = [0.42 - 0.5 * cos((2 * π * n) / (N - 1)) + 0.08 * cos((4 * π * n) / (N - 1)) for n in 0:(N - 1)]
+rect(N::Integer) = (N > 0) ? ones(N) : 0.0
+triang(N::Integer) = (N > 0) ? [1 - abs((n - (N - 1) / 2) / ((N - 1) / 2)) for n in 0:(N - 1)] : 0.0
+hanning(N::Integer) = (N > 0) ? [0.5 * (1 - cos((2 * π * n) / (N - 1))) for n in 0:(N - 1)] : 0.0
+hamming(N::Integer) = (N > 0) ? [0.53836 - 0.46164 * cos((2 * π * n) / (N - 1)) for n in 0:(N - 1)] : 0.0
+blackman(N::Integer) = (N > 0) ? [0.42 - 0.5 * cos((2 * π * n) / (N - 1)) + 0.08 * cos((4 * π * n) / (N - 1)) for n in 0:(N - 1)] : 0.0
 
 function chebwin(N; α=-100)
     missing
