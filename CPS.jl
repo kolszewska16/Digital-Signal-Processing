@@ -11,22 +11,48 @@ const author = Dict(
 ###############################################################################
 # Parametry sygnałów                                                          #
 ###############################################################################
-mean(x::AbstractVector)::Number = sum(abs.(x) .* abs.(x)) / length(x)
+mean(x::AbstractVector)::Number = sum(x) / length(x)
 peak2peak(x::AbstractVector)::Real = maximum(x) - minimum(x)
-energy(x::AbstractVector)::Real = missing
-power(x::AbstractVector)::Real = missing
-rms(x::AbstractVector)::Real = missing
+energy(x::AbstractVector)::Real = sum(abs.(x).^2)
+power(x::AbstractVector)::Real = sum(abs.(x).^2) / length(x)
+rms(x::AbstractVector)::Real = sqrt(sum(abs.(x).^2) / length(x))
+using Random
+power([randn() for i in 1:10])
 
 function running_mean(x::AbstractVector, M::Integer)::Vector
-    missing
+    N = length(x)
+    mean = []
+    for n = 1:N
+        nmin = max(1, n - M)
+        nmax = min(N, n + M)
+        v = sum(x[nmin:nmax]) / (nmax - nmin + 1)
+        append!(mean, v)
+    end
+    return mean
 end
 
 function running_energy(x::AbstractVector, M::Integer)::Vector
-    missing
+    N = length(x)
+    energy = []
+    for n = 1:N
+        nmin = max(1, n - M)
+        nmax = min(N, n + M)
+        v = sum(abs.(x[nmin:nmax]).^2)
+        append!(energy, v)
+    end
+    return energy
 end
 
 function running_power(x::AbstractVector, M::Integer)::Vector
-     missing
+    N = length(x)
+    power = []
+    for n = 1:N
+        nmin = max(1, n - M)
+        nmax = min(N, n + M)
+        v = sum(abs.(x[nmin:nmax]).^2) / (nmax - nmin + 1)
+        append!(power, v)
+    end
+    return power
 end
 
 
