@@ -212,7 +212,7 @@ end
 # Analiza częstotliwościowa sygnałów dyskretnych                              #
 ###############################################################################
 
-fftfreq(N::Integer, fs::Real) = missing
+fftfreq(N::Integer, fs::Real) = [(k * fs) / N for k in 0:(N - 1)]
 rfftfreq(N::Integer, fs::Real) = missing
 
 amplitude_spectrum(x::Vector, w::Vector=rect(length(x)))::Vector = missing
