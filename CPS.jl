@@ -152,11 +152,29 @@ function dtft(f::Real; signal::Vector, fs::Real)
 end
 
 function dft(x::Vector)::Vector
-    missing
+    N = length(x)
+    X = []
+    for k = 0:(N - 1)
+        sum_k = 0
+        for n in 0:(N - 1)
+            sum_k += x[n + 1] * exp(-im * (2 * π / N) * k * n)
+        end
+        append!(X, sum_k)
+    end
+    return X
 end
 
 function idft(x::Vector)::Vector
-    missing
+    N = length(X)
+    x = []
+    for n = 0:(N - 1)
+        sum_n = 0
+        for k in 0:(N - 1)
+            sum_n += X[k + 1] * exp(im * (2 * π / N) * k * n)
+        end
+        append!(x, (1 / N) * sum_n)
+    end
+    return x
 end
 
 function goertzel(x::Vector, k::Integer)::Complex
