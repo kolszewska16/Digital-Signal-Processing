@@ -233,8 +233,8 @@ end
 fftfreq(N::Integer, fs::Real) = [(k * fs) / N for k in 0:(N - 1)]
 rfftfreq(N::Integer, fs::Real) = missing
 
-amplitude_spectrum(x::Vector, w::Vector=rect(length(x)))::Vector = missing
-power_spectrum(x::Vector, w::Vector=rect(length(x)))::Vector = missing
+amplitude_spectrum(x::Vector, w::Vector=rect(length(x)))::Vector = [abs(dft(x .* w)[i]) for i in 1:length(x)]
+power_spectrum(x::Vector, w::Vector=rect(length(x)))::Vector = [abs(dft(x .* w)[i])^2 for i in 1:length(x)]
 psd(x::Vector, w::Vector=rect(length(x)), fs::Real=1.0)::Vector = missing
 
 function welch(x::Vector, w::Vector=rect(length(x)), L::Integer=1, fs::Real=1.0)::Vector
