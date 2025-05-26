@@ -67,7 +67,7 @@ ramp_wave(t::Real)::Real = missing
 sawtooth_wave(t::Real)::Real = missing
 triangular_wave(t::Real)::Real = missing
 square_wave(t::Real)::Real = sign(sin(2  * π * 1 * t))
-pulse_wave(t::Real, ρ::Real=0.2)::Real = missing
+pulse_wave(t::Real, ρ::Real=0.2)::Real = (mod(t, 1) > 0 && mod(t, 1) < ρ) ? 1.0 : 0.0
 
 function impuse_repeater(g::Function, t0::Real, t1::Real)::Function 
     missing
@@ -147,8 +147,16 @@ end
 # Obliczanie dyskretnej transformacji Fouriera                                #
 ###############################################################################
 
-function dtft(f::Real; signal::Vector, fs::Real)
-    missing
+function dtft(x::AbstractVector, f::Real, fs::Real)
+    T = 1 / fs
+    L = length(x)
+    dtft = 0
+    for n = 0:(L - 1)
+        for i = 0:(L - 1)
+            dtft += x[i + 1] * exp(-im * 2 * π * f * i * T)
+        end
+    end
+    return dtft
 end
 
 function dft(x::Vector)::Vector
@@ -178,7 +186,23 @@ function idft(x::Vector)::Vector
 end
 
 function goertzel(x::Vector, k::Integer)::Complex
-    missing
+    N = length(x)
+    ω = (2 * π * k) / N
+    a = 2 * cos(ω)
+
+    s_prev = 0
+    s_prev2 = 0
+
+    for i in 1:N
+        s = x[i] + a * s_prev - s_prev2
+        s_prev2 = s_prev
+        s_prev = s
+    end
+
+    real = s_prev - cos(ω) * s_prev2
+    imag = sin(ω) * s_prev2
+
+    return real + im * imag
 end
 
 function recursiv_dft(N::Integer)::Function
@@ -194,11 +218,52 @@ function cos_recursiv_dft(N::Integer, a::Vector)::Function
 end
 
 function rdft(x::Vector)::Vector
-    missing
+    N = length(x)
+    output_length = floor(N / 2) + 1
+    X = []
+
+    for k in 0:(output_length - 1)
+        sum = 0
+        for n in 0:(N - 1)
+            sum += x[n + 1] * exp((-im * 2 * π * k * n) / N)
+        end
+        append!(X, sum)
+    end
+    return X
 end
 
 function irdft(X::Vector, N::Integer)::Vector
-    missing
+    L = length(X)
+    expectedL = floor(Int, N / 2) + 1
+    if L != expectedL
+        error("Invalid value")
+    end
+
+    X_full = zeros(ComplexF64, N)
+    X_full[1] = X[1]
+
+    for k in 1:(L - 1)
+        X_full[k + 1] = X[k + 1]
+    end
+
+    for k in 1:(L - 1)
+        if N % 2 == 0 && k == N ÷ 2
+            continue
+        end
+        X_full[N - k + 1] = conj(X[k + 1])
+    end
+
+    x = []
+    for n in 0:(N - 1)
+        sum = 0
+        for k in 0:(N - 1)
+            sum += (1 / N) * X_full[k + 1] * exp((im * 2 * π * k * n) / N)
+        end
+        v = real(sum)
+        append!(x, v)
+    end
+
+    return x
 end
 
 function fft_radix2_dit_r(x::Vector)::Vector
@@ -272,4 +337,138 @@ Outputs:
 """
 function phase_retrieval(X, w, L, N)
     missing, missing
+end
+
+
+###############################################################################
+# Systemy dyskretne                                                           #
+###############################################################################
+
+function lti_amp(f::Real; b::Vector, a::Vector)::Real
+    missing
+end
+
+function lti_phase(f::Real; b::Vector, a::Vector)::Real
+    missing
+end
+
+function conv(f::Vector, g::Vector)::Vector
+    missing
+end
+
+function fast_conv(f::Vector, g::Vector)::Vector
+    missing
+end
+
+function overlap_add(f::Vector, g::Vector, L::Integer)::Vector
+    missing
+end
+
+function overlap_save(f::Vector, g::Vector, L::Integer)::Vector
+    missing
+end
+
+function lti_filter(b::Vector, a::Vector, x::Vector)::Vector
+    missing
+end
+
+function filtfilt(b::Vector, a::Vector, x::Vector)::Vector
+    missing
+end
+
+###############################################################################
+# Projektowanie filtrÃ³w                                                       #
+###############################################################################
+
+function firwin_lp_I(M::Integer, F0::Real)::Vector
+    length = M + 1
+    L = M / 2
+
+    h = zeros(Float64, length)
+    n = collect(-L:L)
+    
+    for i in eachindex(n)
+        if n[i] != 0
+            h[i] = 2 * F0 * (sin(2 * π * F0 * n[i])) / (2 * π * F0 * n[i])
+        else
+            h[i] = 2 * F0
+        end
+    end
+    return h
+end
+
+function firwin_hp_I(M::Integer, F0::Real)::Vector
+    length = M + 1
+    L = M / 2
+
+    h = zeros(Float64, length)
+    n = collect(-L:L)
+
+    for i in eachindex(n)
+        if n[i] != 0
+            h[i] = -2 * F0 * (sin(2 * π * F0 * n[i])) / (2 * π * F0 * n[i])
+        else
+            h[i] = 1 - 2 * F0
+        end
+    end
+    return h
+end
+
+function firwin_bp_I(M::Integer, F1::Real, F2::Real)
+    length = M + 1
+    L = M / 2
+
+    h = zeros(Float64, length)
+    n = collect(-L:L)
+
+    for i in eachindex(n)
+        if n[i] != 0
+            h[i] = 2 * F2 * (sin(2 * π * F2 * n[i])) / (2 * π * F2 * n[i]) - 2 * F1 * (sin(2 * π * F1 * n[i])) / (2 * π * F1 * n[i])
+        else
+            h[i] = 2 * F2 - 2 * F1
+        end
+    end
+    return h
+end
+
+function firwin_bs_I(M::Int, F1::Real, F2::Real)::Vector
+    length = M + 1
+    L = M / 2
+
+    h = zeros(Float64, length)
+    n = collect(-L:L)
+
+    for i in eachindex(n)
+        if n[i] != 0
+            h[i] = -2 * F1 * (sin(2 * π * F1 * n[i])) / (2 * π * F1 * n[i]) - (-2 * F2 * (sin(2 * π * F2 * n[i])) / (2 * π * F2 * n[i]))
+        else
+            h[i] = 1 - (2 * F2 - 2 * F1)
+        end
+    end
+    return h
+end
+
+
+function firwin_lp_II(M::Integer, F0::Real)::Vector
+    missing
+end
+
+function firwin_bp_II(M::Integer, F1::Real, F2::Real)::Vector
+    missing
+end
+
+function firwin_diff(M)
+    missing
+end
+
+function fir_I_LS(N::Integer, freq::Vector, amp::Vector, w::Vector)::Vector
+    missing
+end
+
+function fir_I_remez(M::Integer, A::Function, W::Function)
+    missing
+end
+
+function firwin_lp_kaiser_lp(f0, Δf, δ)
+    missing
 end
