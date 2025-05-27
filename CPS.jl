@@ -122,7 +122,6 @@ function kaiser(N; β=0, K=20)
     missing
 end
 
-end
 
 
 ###############################################################################
@@ -377,7 +376,7 @@ function filtfilt(b::Vector, a::Vector, x::Vector)::Vector
 end
 
 ###############################################################################
-# Projektowanie filtrÃ³w                                                       #
+# Projektowanie filtrów                                                       #
 ###############################################################################
 
 function firwin_lp_I(M::Integer, F0::Real)::Vector
@@ -448,17 +447,43 @@ function firwin_bs_I(M::Int, F1::Real, F2::Real)::Vector
     return h
 end
 
-
 function firwin_lp_II(M::Integer, F0::Real)::Vector
-    missing
+    length = M + 1
+    h = zeros(Float64, length)
+    n = collect(-M / 2:1:M / 2)
+
+    for i in eachindex(n)
+        h[i] = 2 * F0 * (sin(2 * π * F0 * n[i])) / (2 * π * F0 * n[i])
+    end
+    return h
 end
 
 function firwin_bp_II(M::Integer, F1::Real, F2::Real)::Vector
-    missing
+    length = M + 1
+    h = zeros(Float64, length)
+    n = collect(-M /2:1:M / 2)
+
+    for i in eachindex(n)
+        h[i] = 2 * F2 * (sin(2 * π * F2 * n[i])) / (2 * π * F2 * n[i]) - 2 * F1 * (sin(2 * π * F1 * n[i])) / (2 * π * F1 * n[i])
+    end
+    return h
 end
 
 function firwin_diff(M)
-    missing
+    length = M + 1
+    L = M / 2
+
+    h = zeros(Float64, length)
+    n = collect(-L:L)
+
+    for i in eachindex(n)
+        if n[i] == 0
+            h[i] = 0
+        else
+            h[i] = cos(π * n[i]) / n[i]
+        end
+    end
+    return h
 end
 
 function fir_I_LS(N::Integer, freq::Vector, amp::Vector, w::Vector)::Vector
