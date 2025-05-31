@@ -63,9 +63,9 @@ ci_triangle(t::Real; T::Real=1.0)::Real = (abs(t) < T) ? (1 - abs(t)) : 0.0
 ci_literka_M(t::Real; T=1.0)::Real = (abs(t) <= T / 2) ? (abs(t) + 0.5) : 0.0
 ci_literka_U(t::Real; T=1.0)::Real = (abs(t) <= T / 2) ? (4 * t^2) : 0.0
 
-ramp_wave(t::Real)::Real = missing
-sawtooth_wave(t::Real)::Real = missing
-triangular_wave(t::Real)::Real = missing
+ramp_wave(t::Real)::Real = (t >= 0) ? rem(t, 1) : rem(t, 1) + 1
+sawtooth_wave(t::Real)::Real = (t >= 0) ? (1 - rem(t, 1)) : rem(1 - t, 1)
+triangular_wave(t::Real)::Real = 4 * abs(t - floor(t + 3 / 4) + 1 / 4) - 1
 square_wave(t::Real)::Real = sign(sin(2  * π * 1 * t))
 pulse_wave(t::Real, ρ::Real=0.2)::Real = (mod(t, 1) > 0 && mod(t, 1) < ρ) ? 1.0 : 0.0
 
