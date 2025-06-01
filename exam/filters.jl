@@ -12,7 +12,7 @@ function rozwiazanie1(;
     f0::Float64 = 49.92,
     z::Vector{Int} = [1, 10, 1, 19, 21],
 )
-    delta(n) = (n == 0) ? 1 : 0
+    δ(n) = (n == 0) ? 1 : 0
     hanning(N) = [0.5 + 0.5 * cos((2 * π * n) / (2 * N + 1)) for n in -N:N]
 
     fg = f0 / fp
@@ -20,7 +20,7 @@ function rozwiazanie1(;
     h = zeros(Float64, length(n))
     
     for i in 1:length(n)
-        h[i] = delta(n[i]) - 2 * fg * sin(2 * π * fg * n[i]) / (2 * π * fg * n[i])
+        h[i] = δ(n[i]) - 2 * fg * sin(2 * π * fg * n[i]) / (2 * π * fg * n[i])
     end
 
     w = hanning(order / 2)
@@ -58,7 +58,7 @@ function rozwiazanie33(;
     f0::Float64 = 61.69,
     z::Vector{Int} = [3, 9, 25, 10, 3, 18],
 )
-    delta(n) = (n == 0) ? 1 : 0
+    δ(n) = (n == 0) ? 1 : 0
     hamming(N) = [0.54 + 0.46 * cos((π * n) / (2 * N + 1)) for n in -N:N]
 
     n = -order / 2 : order / 2
@@ -66,7 +66,7 @@ function rozwiazanie33(;
     h = zeros(Float64, length(n))
 
     for i in 1:length(n)
-        h[i] = delta(n[i]) - 2 * sin(2 * π * fg * n[i]) / (2 * π * fg * n[i])
+        h[i] = δ(n[i]) - 2 * sin(2 * π * fg * n[i]) / (2 * π * fg * n[i])
     end
 
     w = hamming(order / 2)
@@ -91,7 +91,7 @@ function rozwiazanie44(;
     f2::Float64 = 80.36,
     z::Vector{Int} = [7, 10, 13, 47],
 )
-    delta(n) = (n == 0) ? 1 : 0
+    δ(n) = (n == 0) ? 1 : 0
     barlett(N) = [(1 - abs(n)) / (N + 1) for n in -N:N]
 
     fg1 = f1 / fp
@@ -100,7 +100,7 @@ function rozwiazanie44(;
     h = zeros(Float64, length(n))
 
     for i in 1:length(n)
-        h[i] = delta(n[i]) - 2 * fg2 * sin(2 * π * fg2 * n[i]) / (2 * π * fg2 * n[i]) - 2 * fg1 * sin(2 * π * fg1 * n[i]) / (2 * π * fg1 * n[i])
+        h[i] = δ(n[i]) - 2 * fg2 * sin(2 * π * fg2 * n[i]) / (2 * π * fg2 * n[i]) - 2 * fg1 * sin(2 * π * fg1 * n[i]) / (2 * π * fg1 * n[i])
     end
 
     w = barlett(order / 2)
@@ -124,7 +124,7 @@ function rozwiazanie50(;
     f0::Float64 = 82.13,
     z::Vector{Int} = [31, 22, 39, 34, 44, 34],
 )
-    delta(n) = (n == 0) ? 1 : 0
+    δ(n) = (n == 0) ? 1 : 0
     hamming(N) = [0.54 + 0.46 * cos((π * n) / (2 * N + 1)) for n in -N:N]
 
     n = -order / 2 : order / 2
@@ -132,7 +132,7 @@ function rozwiazanie50(;
     h = zeros(Float64, length(n))
 
     for i in 1:length(n)
-        h[i] = delta(n[i]) - 2 * fg * sin(2 * π * fg * n[i]) / (2 * π * fg * n[i])
+        h[i] = δ(n[i]) - 2 * fg * sin(2 * π * fg * n[i]) / (2 * π * fg * n[i])
     end
 
     w = hamming(order / 2)
