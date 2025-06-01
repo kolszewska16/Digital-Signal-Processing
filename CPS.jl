@@ -128,7 +128,7 @@ end
 # Próbkowanie i kwantyzacja                                                   #
 ###############################################################################
 
-quantize(L::AbstractVector)::Function = missing
+quantize(L::AbstractVector)::Function = x -> L[argmin(abs.(x .- L))]
 SQNR(N::Integer)::Real = (N > 0) ? 10 * log10(3 * 2^(2 * N)) : 0.0
 SNR(Psignal::Real, Pnoise::Real)::Real = 10 * log10(Psignal / Pnoise)
 
