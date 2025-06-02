@@ -1,5 +1,4 @@
 mean(x::AbstractVector)::Number = sum(x) / length(x)
-peak2peak(x::AbstractVector)::Real = maximum(x) - minimum(x)
 energy(x::AbstractVector)::Real = sum(abs.(x).^2)
 power(x::AbstractVector)::Real = sum(abs.(x).^2) / length(x)
 rms(x::AbstractVector)::Real = sqrt(sum(abs.(x).^2) / length(x))
