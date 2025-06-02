@@ -45,9 +45,28 @@ function rozwiazanie18(;
     f2::Float64 = 69.35,
     z::Vector{Int} = [15, 17, 11, 19, 25, 13],
 )
-    missing
+    hamming(N) = [0.54 + 0.46 * cos((2 * π * n) / (2 * N + 1)) for n in -N:N]
+
+    n = -order / 2 : order / 2
+    fg1 = f1 / fp
+    fg2 = f2 / fp
+    h = zeros(Float64, length(n))
+
+    for i in 1:length(n)
+        h[i] = 2 * fg2 * sin(2 * π * fg2 * n[i]) / (2 * π * fg2 * n[i]) - 2 * fg1 * sin(2 * π * fg1 * n[i]) / (2 * π * fg1 * n[i])
+    end
+    
+    w = hamming(order / 2)
+    hw = h .* w
+    
+    sum = 0
+    for i in z
+        sum += hw[i]
+    end
+    return sum
 end
 
+# -0.02790845272184913
 rozwiazanie18()
 
 # problem 33  
