@@ -23,20 +23,20 @@ rozwiazanie3()
 
 # problem 4
 # średnia dyskretnego sygnału
-# bipolarna fala prostokątna: A = 1, T = 1s, składowa stała: 0, g(0) = 0, g(t) = 0 dla 0 < t < 0.5
+# bipolarna fala prostokątna: A = 1, T = 1s, składowa stała: 0, g(0) = 0, g(t) = 1 dla 0 < t < 0.5
 function rozwiazanie4(;
     fp::Float64 = 219.95,
     t1::Float64 = -7.63,
     N::Int = 125,
 )
-    g(t) = sign(-sin(2 * π * t))
+    g(t) = sign(sin(2 * π * t))
     x = range(start = t1, step = 1 / fp, length = N)
     y = [0.5 * g(4.9 * t - 3.6) for t in x]
     mean = sum(y) / length(y)
     return mean
 end
 
-# -0.028
+# 0.028
 rozwiazanie4()
 
 # problem 7
