@@ -18,8 +18,8 @@ function rozwiazanie12(;
             end
         end
         for k in 2:K
-            if((n - k + 1) > 0 && n - k + 1 <= N)
-                y[n] -= a[k] * x[n - k + 1]
+            if((n - k + 1) > 0 && n - k + 1 <= L)
+                y[n] -= a[k] * y[n - k + 1]
             end
         end
     end
@@ -28,7 +28,7 @@ function rozwiazanie12(;
     return mean
 end
 
-# 0.0448051948051948
+# 0.0448068128414413
 rozwiazanie12()
 
 # problem 23
@@ -51,8 +51,8 @@ function rozwiazanie23(;
             end
         end
         for k in 2:K
-            if((n - k + 1) > 0 && (n - k + 1) <= N)
-                y[n] -= a[k] * x[n - k + 1]
+            if((n - k + 1) > 0 && (n - k + 1) <= L)
+                y[n] -= a[k] * y[n - k + 1]
             end
         end
     end
@@ -61,7 +61,7 @@ function rozwiazanie23(;
     return rms
 end
 
-# 2.018121774303988
+# 0.2908694539833204
 rozwiazanie23()
 
 # problem 34
@@ -84,8 +84,8 @@ function rozwiazanie34(;
             end
         end
         for k in 2:K
-            if((n - k + 1) > 0 && (n - k + 1) <= N)
-                y[n] -= a[k] * x[n - k + 1]
+            if((n - k + 1) > 0 && (n - k + 1) <= L)
+                y[n] -= a[k] * y[n - k + 1]
             end
         end
     end
@@ -94,7 +94,7 @@ function rozwiazanie34(;
     return power
 end
 
-# 0.6555072892553799
+# 0.13157219368214537
 rozwiazanie34()
 
 # problem 51
@@ -117,8 +117,8 @@ function rozwiazanie51(;
             end
         end
         for k in 2:K
-            if((n - k + 1) > 0 && (n - k + 1) <= N)
-                y[n] -= a[k] * x[n - k + 1]
+            if((n - k + 1) > 0 && (n - k + 1) <= L)
+                y[n] -= a[k] * y[n - k + 1]
             end
         end
     end
@@ -126,7 +126,7 @@ function rozwiazanie51(;
     return energy
 end
 
-# 34.811489672507236
+# 4.964239705749917
 rozwiazanie51()
 
 # problem 52
@@ -149,8 +149,8 @@ function rozwiazanie52(;
             end
         end
         for k in 2:K
-            if((n - k + 1) > 0 && (n - k + 1) <= N)
-                y[n] -= a[k] * x[n - k + 1]
+            if((n - k + 1) > 0 && (n - k + 1) <= L)
+                y[n] -= a[k] * y[n - k + 1]
             end
         end
     end
@@ -158,5 +158,5 @@ function rozwiazanie52(;
     return energy
 end
 
-# 88.11841048815972
+# 2.4552059372704895
 rozwiazanie52()
