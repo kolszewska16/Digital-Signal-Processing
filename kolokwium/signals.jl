@@ -164,3 +164,21 @@ end
 
 # -0.005044939311309727
 rozwiazanie40()
+
+# problem 57
+# średnia dyskretnego sygnału 
+# fala piłokształtna o narastającym zboczu: A = 1, T = 1s, składowa stała: 0, g(0) = 0, dg/dt|t=0 = 2           
+function rozwiazanie57(;
+    fp::Float64 = 498.99,
+    t1::Float64 = 9.38,
+    N::Int = 504,
+)
+    g(t) = 2 * (t - floor(t + 0.5))
+    x = range(start = t1, step = 1 / fp, length = N)
+    y = [3.4 * g(3.6 * t - 3.0) for t in x]
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# 0.10203333552825061
+rozwiazanie57()

@@ -127,4 +127,31 @@ function rozwiazanie54(;
 end
 
 # 37.001556618699155
-rozwiazanie54()
+rozwiazanie54()   
+
+
+
+# średnie wzmocnienie
+function rozwiazanie8(;
+    b::Vector{Float64} = [0.6668547023844128, -1.720764471909391, 3.4806618241912046, -3.8658925116288825, 3.4806618241912037, -1.720764471909391, 0.6668547023844127],
+    a::Vector{Float64} = [1.0, -2.2575274288819127, 3.948876910415752, -3.813445803637163, 2.951472093696976, -1.2364482229285918, 0.3946840490385092],
+    F::Vector{Float64} = [0.14, 0.43, 0.48, 0.5],
+)
+    out = zeros(Float64, length(F))
+    for i in 1:length(F)
+        num = 0
+        denom = 0
+        for n in 1:length(b)
+            num += b[n] * exp(2im * π * F[i]) ^ -(n - 1)
+        end
+        for m in 2:length(a)
+            denom += a[m] * exp(2im * π * F[i]) ^ -(m - 1)
+        end
+        out[i] += abs(num / (1 + denom))
+    end
+    mean = sum(out) / length(out)
+    return mean
+end
+
+# 0.9475142159299257
+rozwiazanie8()
