@@ -165,9 +165,47 @@ end
 # -0.005044939311309727
 rozwiazanie40()
 
-# problem 57
-# średnia dyskretnego sygnału 
-# fala piłokształtna o narastającym zboczu: A = 1, T = 1s, składowa stała: 0, g(0) = 0, dg/dt|t=0 = 2           
+
+
+# problem 20
+# średnia dyskretnego sygnału     
+# bipolarna fala prostokątna: A = 1, T = 1s, składowa stała: 0, g(0) = 0, g(t) = 1 dla 0 < t < 0.5
+function rozwiazanie20(;
+    fp::Float64 = 471.46,
+    t1::Float64 = 0.28,
+    N::Int = 922,
+)
+    g(t) = sign(sin(2 * π * t))
+    x = range(start = t1, step = 1 / fp, length = N)
+    y = [3.0 * g(2.5 * t - 1.0) for t in x]
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# 0.07158351409978309
+rozwiazanie20()
+
+# problem 34
+# średnia dyskretnego sygnału  
+# fala piłokształtna o opadającym zboczu: A = 1, T = 1s, składowa stała: 0, g(0) = 0, dg/dt|t=0 = -2         
+function rozwiazanie34(;
+    fp::Float64 = 434.88,
+    t1::Float64 = 0.92,
+    N::Int = 826,
+)
+    g(t) = -2 * (t - floor(t + 0.5))
+    x = range(start = t1, step = 1 / fp, length = N)
+    y = [3.9 * g(0.3 * t - 2.0) for t in x]
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# 0.35861492150794555
+rozwiazanie34()
+
+# problem 57    
+# średnia dyskretnego sygnału  
+# fala piłokształtna o narastającym zboczu: A = 1, T = 1s, składowa stała: 0, g(0) = 0, dg/dt|t=0 = 2     
 function rozwiazanie57(;
     fp::Float64 = 498.99,
     t1::Float64 = 9.38,
@@ -182,3 +220,75 @@ end
 
 # 0.10203333552825061
 rozwiazanie57()
+
+# problem 76
+# średnia dyskretnego sygnału  
+# fala trójkątna: A = 1, T = 1s składowa stała: 0, g(0) = 0, dg/dt|t=0 = 4        
+function rozwiazanie76(;
+    fp::Float64 = 406.56,
+    t1::Float64 = -2.67,
+    N::Int = 643,
+)
+    g(t) = 4 * abs(t - floor(t + 0.75) + 0.25) - 1
+    x = range(start = t1, step = 1 / fp, length = N)
+    y = [0.6 * g(4.7 * t - 4.7) for t in x]
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# -0.00533353506383351
+rozwiazanie76()
+
+# problem 79
+# średnia dyskretnego sygnału 
+# bipolarna fala prostokątna: A = 1, T = 1s, składowa stała: 0, g(0) = 0, g(t) = 1 dla 0 < t < 0.5
+function rozwiazanie79(;
+    fp::Float64 = 352.67,
+    t1::Float64 = 0.09,
+    N::Int = 237,
+)
+    g(t) = sign(sin(2 * π * t))
+    x = range(start = t1, step = 1 / fp, length = N)
+    y = [3.3 * g(4.1 * t - 4.2) for t in x]
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# -0.09746835443037977
+rozwiazanie79()
+
+# problem 86
+# średnia dyskretnego sygnału 
+# fala trójkątna: A = 1, T = 1s składowa stała: 0, g(0) = 0, dg/dt|t=0 = 4        
+function rozwiazanie86(;
+    fp::Float64 = 159.74,
+    t1::Float64 = -1.74,
+    N::Int = 99,
+)
+    g(t) = 4 * abs(t - floor(t + 0.75) + 0.25) - 1
+    x = range(start = t1, step = 1 / fp, length = N)
+    y = [3.1 * g(3.7 * t - 1.5) for t in x]
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# 0.26492246769687544
+rozwiazanie86()
+
+# problem 87
+# średnia dyskretnego sygnału 
+# fala piłokształtna o opadającym zboczu: A = 1, T = 1s, składowa stała: 0, g(0) = 0, dg/dt|t=0 = -2         
+function rozwiazanie87(;
+    fp::Float64 = 435.66,
+    t1::Float64 = -4.54,
+    N::Int = 905,
+)
+    g(t) = -2 * (t - floor(t + 0.5))
+    x = range(start = t1, step = 1 / fp, length = N)
+    y = [5.1 * g(1.2 * t - 3.3) for t in x]
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# -0.02019549412931455
+rozwiazanie87()
