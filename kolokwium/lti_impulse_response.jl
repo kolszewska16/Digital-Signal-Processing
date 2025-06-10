@@ -17,7 +17,7 @@ function rozwiazanie9(;
 
         for n in 1:K
             for m in 1:M
-                if(n - m > 0 && n - m + 1 <= N)
+                if(n - m + 1> 0 && n - m + 1 <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -30,7 +30,7 @@ function rozwiazanie9(;
     return rms
 end
 
-# 29.807344933357662
+# 30.17822666195721
 rozwiazanie9()
 
 # problem 28
@@ -47,7 +47,7 @@ function rozwiazanie28(;
 
         for n in 1:K
             for m in 1:M
-                if(n - m > 0 && n - m + 1 <= N)
+                if(n - m + 1 > 0 && n - m + 1 <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -60,7 +60,7 @@ function rozwiazanie28(;
     return mean
 end
 
-# -0.021795180722891258
+# -0.02494337349397532
 rozwiazanie28()
 
 # problem 29
@@ -77,7 +77,7 @@ function rozwiazanie29(;
 
         for n in 1:K
             for m in 1:M
-                if(n - m > 0 && n - m + 1 <= N)
+                if(n - m + 1> 0 && n - m + 1 <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -90,7 +90,7 @@ function rozwiazanie29(;
     return mean
 end
 
-# -5.181650000000001
+# -5.742750000000002
 rozwiazanie29()
 
 # problem 39
@@ -107,7 +107,7 @@ function rozwiazanie39(;
 
         for n in 1:K
             for m in 1:M
-                if(n - m > 0 && n - m + 1 <= N)
+                if(n - m + 1> 0 && n - m + 1 <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -120,7 +120,7 @@ function rozwiazanie39(;
     return energy
 end
 
-# 50725.77597545001
+# 51040.51474921001
 rozwiazanie39()
 
 # problem 43
@@ -137,7 +137,7 @@ function rozwiazanie43(;
 
         for n in 1:K
             for m in 1:M
-                if(n - m > 0 && n - m + 1 <= N)
+                if(n - m + 1> 0 && n - m + 1 <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -150,7 +150,7 @@ function rozwiazanie43(;
     return power
 end
 
-# 676.1974333409999
+# 735.094220581
 rozwiazanie43()
 
 # problem 46
@@ -167,7 +167,7 @@ function rozwiazanie46(;
 
         for n in 1:K
             for m in 1:M
-                if(n - m > 0 && n - m + 1 <= N)
+                if(n - m + 1> 0 && n - m + 1 <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -180,5 +180,97 @@ function rozwiazanie46(;
     return rms
 end
 
-# 22.785397867741253
+# 23.325237793302012
 rozwiazanie46()
+
+
+
+# problem 12
+# średnia sygnału           
+function rozwiazanie12(;
+    x::Vector{Float64} = [-3.7, -3.08, -0.03, -4.52, 1.96, -2.09, -0.57, 4.51, -2.29, -3.16, -0.33, 0.09, 4.28, -1.48, -2.41, 0.25, -4.49, -4.92, -2.37, -3.47, 4.74, 1.43, -2.83, 1.64, -3.8, -4.85, 0.3, -4.99, -3.69, -1.57, -0.28, -2.36, -4.77, 0.97, -0.35, -0.26, 0.61, -3.76, -3.19, 4.72, -2.3, 0.0, 1.58, -0.13, 2.75, -4.13, -3.22, -3.15, 2.5, -0.71, 3.49, -2.69, -2.04, -2.29, -2.43, 3.01, 2.17, 2.21, -4.16, -1.48, -0.69, -3.52, -3.6],
+    h::Vector{Float64} = [-0.64, 4.88, -0.42, -1.42, 0.06, -3.67, -3.69, -2.31, 4.06, -1.02, -2.1],
+)
+    function conv(x, h)
+        N = length(x)
+        M = length(h)
+        K = N + M - 1
+        y = zeros(Float64, K)
+
+        for n in 1:K
+            for m in 1:M
+                if(n - m + 1 > 0 && n - m + 1 <= N)
+                    y[n] += h[m] * x[n - m + 1]
+                end
+            end
+        end
+        return y
+    end
+
+    y = conv(x, h)
+    mean = sum(y) / length(y)
+    return mean
+end
+
+# 5.921284931506849
+rozwiazanie12()
+
+# problem 78
+# moc sygnału          
+function rozwiazanie78(;
+    x::Vector{Float64} = [3.99, 4.6, 3.57, 1.35, -1.29, -4.78, -1.5, 1.78, 4.86, 2.52, -0.42, 1.68, 1.4, -2.56, 0.61, 0.12, 4.6, 1.76, -4.93, -2.21, -1.07, -4.81, -3.48, -0.65, -1.04, -3.53, -2.08, 0.94, -4.23, -4.8, 1.45, 2.72, 3.48, 2.24, -1.17, 1.47, -4.83, 3.85, -0.83, 3.92, -0.13, 2.68, 2.49, 3.78, -0.07, -2.9, -2.83, -4.85, 1.29, -2.01, -2.72, -4.41, 4.86, 2.36, -2.04, 0.53, -1.86, -4.27, 0.51, 0.83, 3.42, -1.98],
+    h::Vector{Float64} = [3.73, -2.41, -4.15, 3.2, -3.61, -1.43, 2.87, 4.82, 3.43, -3.85, 3.78, -1.1, -0.25, 0.97, -3.4, 4.31, 1.68, 3.21, -1.48, 0.8, 2.54, 0.25, 1.27],
+)
+    function conv(x, h)
+        N = length(x)
+        M = length(h)
+        K = N + M - 1
+        y = zeros(Float64, K)
+
+        for n in 1:K
+            for m in 1:M
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
+                    y[n] += h[m] * x[n - m + 1]
+                end
+            end
+        end
+        return y
+    end
+
+    y = conv(x, h)
+    power = sum(abs.(y) .^ 2) / length(y)
+    return power
+end
+
+# 1073.2866157040476
+rozwiazanie78()
+
+# problem 84
+# wartość skuteczna sygnału           
+function rozwiazanie84(;
+    x::Vector{Float64} = [-3.33, -0.09, -0.98, -2.72, -3.12, 3.56, -0.83, 1.4, 1.1, -4.48, 2.94, 4.78, -3.66, 1.81, 0.31, 3.81, -2.33, -4.8, 4.57, 3.99, 4.57, 3.27, -3.0, -0.37, 4.69, 2.85, 0.42, 4.07, -2.19, 1.94, 1.36, 1.67, -0.19, 4.33, -1.23, -1.08, -2.71, -0.56, 4.61, 3.96, -1.31, -1.82, 3.25, -3.72, -4.04, 2.05, -1.36, -3.62, -2.22, -3.58, -0.11, -4.13, 2.52, 3.3, 1.99, 2.03, -1.23, 1.46, 1.75, -0.77, 4.55],
+    h::Vector{Float64} = [-0.51, 0.04, 2.04, 1.06, 1.34, -4.33, 1.79, 4.69, 0.09, -3.38, -4.88, -4.17, -4.35, -3.21, 0.06, -2.74, -2.82, -0.66, 0.12, -1.6],
+)
+    function conv(x, h)
+        N = length(x)
+        M = length(h)
+        K = N + M - 1
+        y = zeros(Float64, K)
+        
+        for n in 1:K
+            for m in 1:M
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
+                    y[n] += h[m] * x[n - m + 1]
+                end
+            end
+        end
+        return y
+    end
+
+    y = conv(x, h)
+    rms = sqrt(sum(abs.(y) .^ 2) / length(y))
+    return rms
+end
+
+# 32.807688776984875
+rozwiazanie84()
