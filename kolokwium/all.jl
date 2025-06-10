@@ -65,7 +65,7 @@ end
 rozwiazanie3()
 
 # 3.06.2025
-# średnia sygnału wyjściowego         
+# średnia sygnału          
 function rozwiazanie4(;
     x::Vector{Float64} = [-4.2, -4.49, -4.35, -2.19, -1.85, -2.99, 0.31, -1.75, 4.71, -2.75, -4.91, 0.09, 3.68, 3.28, -4.33, 2.79, 3.46, -3.34, 4.66, -1.41, 0.05, -0.37, -1.7, 4.39, -0.39, -3.74, -4.55, -1.81, -0.25, 2.29, 1.45, -2.97, 2.15, -2.55, -0.87, 3.58, 3.75, 2.53, -4.03, -3.78, 3.09, -3.2, 3.98, -3.69, 0.24, -0.55, -3.82, 2.35, 1.73, 4.02, -3.96, -4.14, 2.55, -0.73, 1.55, -0.49, 0.88, -0.65, 1.95, 4.88, 2.74, -1.43],
     h::Vector{Float64} = [-0.47, -1.2, 0.0, 4.28, 2.82, -2.73, -0.58, -4.44, -2.55, -1.91, 1.56, 0.98, -0.17, 0.15],
@@ -78,7 +78,7 @@ function rozwiazanie4(;
 
         for n in 1:K
             for m in 1:M
-                if(n - m > 0 && n - m + 1 <= N)
+                if(n - m + 1 > 0 && n - m + 1 <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -91,7 +91,7 @@ function rozwiazanie4(;
     return mean 
 end
 
-# 0.6191199999999998
+# 0.8576799999999998
 rozwiazanie4()
 
 # średnie wzmocnienie 
@@ -119,43 +119,23 @@ end
 # 0.5797457895466975
 rozwiazanie5()
 
-# 40-punktowe DFT
-# suma amplitud składowych częstotliwościowych
+
+# suma amplitud
 function rozwiazanie6(;
     fp::Int = 840,
     x::Vector{ComplexF64} = ComplexF64[-1.42 - 1.3im, -0.86 + 0.71im, -0.61 + 0.32im, 0.74 - 0.46im, 0.13 - 0.22im, -0.46 - 1.2im, 0.85 + 0.14im, -0.3 - 0.4im, 1.4 + 1.36im, 0.74 - 0.19im, -0.23 - 2.32im, -0.65 + 1.46im, 0.03 + 0.88im, 0.06 - 0.24im, -0.05 - 0.96im, 0.18 - 0.67im, 0.77 - 0.16im, -0.04 + 0.5im, -0.55 + 1.21im, -0.53 + 0.44im, 0.57 + 0.59im, 0.02 + 0.32im, 0.08 + 1.05im, 0.42 + 0.72im, -0.46 - 1.27im, -0.22 - 0.5im, -0.32 - 0.49im, -0.19 + 0.22im, -0.12 + 0.67im, -1.19 - 1.4im, 0.29 - 0.39im, 0.57 + 0.65im, -0.64 - 0.25im, -0.46 - 0.97im, -0.86 - 0.39im, -0.25 - 0.27im, -0.37 - 1.16im, -0.09 + 0.59im, 0.4 + 1.06im, -0.51 + 0.53im],
     f::Vector{Int} = [-294, -273, -168, 0, 42, 273, 336],
 )
-    function dft(x)
-        N = length(x)
-        X = zeros(ComplexF64, N)
-        for k in 1:N
-            for n in 1:N
-                X[k] += x[n] * cispi(-2 * (n - 1) * (k - 1) / N)
-            end
-        end
-        return X / N
-    end
-
     N = length(x)
-    Δf = fp / N
-    X = dft(x)
-    F = zeros(Float64, N)
-    F[Int(floor(N / 2) + 2)] = -(floor((N - 1) / 2)) * Δf
-    out = 0
-
-    for i in 1:(N - 1)
-        if((i + 1) != floor(N / 2) + 2)
-            F[i + 1] = F[i] + Δf
+    sum = 0
+    for fi in f
+        X = 0
+        for n in 0:(N - 1)
+            X += x[n + 1] * exp(-2im * π * (fi / fp) * n)
         end
+        sum += abs(X / N)
     end
-
-    for i in 1:N
-        if(F[i] in f)
-            out += abs(X[i])
-        end
-    end
-    return out
+    return sum
 end
 
 # 1.001621818267306
@@ -287,17 +267,17 @@ function rozwiazanie11(;
     k::Float64 = 0.0006201142564604331,
     F::Vector{Float64} = [0.11, 0.23, 0.44, 0.46, 0.47],
 )
-    out = zeros(ComplexF64, length(F))
+    out = zeros(Float64, length(F))
     for i in 1:length(F)
-        num = 0
-        denom = 0
+        num = 1
+        denom = 1
         for z in 1:length(zz)
-            num += (zz[z] * exp(-2im * π * F[i] * (z - 1)))
+            num *= (1 - zz[z] * exp(-2im * π * F[i]))
         end
         for p in 1:length(pp)
-            denom += (pp[p] * exp(-2im * π * F[i] * (p - 1)))
+            denom *= (1 - pp[p] * exp(-2im * π * F[i]))
         end
-        out[i] += angle((k * num) / (1 + denom))
+        out[i] += angle((k * num) / denom)
     end
     mean = sum(out) / length(out)
     return mean
@@ -450,7 +430,7 @@ function rozwiazanie17(;
 
         for n in 1:K
             for m in 1:M
-                if((n - m) > 0 && (n - m + 1) <= N)
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -463,7 +443,7 @@ function rozwiazanie17(;
     return power
 end
 
-# 740.1830334630137
+# 739.1883716257533
 rozwiazanie17()
 
 # suma wartości sygnału g(t)          
@@ -486,10 +466,6 @@ end
 # 5.712807518929044
 rozwiazanie18()
 
-# ???
-# Oblicz odpowiedź impulsową h∈R15h∈R15 nierekursywnego filtru górnoprzepustowego rzędu 14 o liniowej charakterystyce fazowej. Filtr zaprojektuj tak aby przy częstotliwości próbkowania fp=193.0fp​=193.0 Hz, 3 dB pasmo przepustowe zaczynało się na częstotliwość f0=69.48f0​=69.48 Hz. Do zaprojektowania filtru wykorzystaj metodę okien czasowych i okno Blackmana. Jako rozwiązanie podaj sumę wartości wektora hh o indeksach z=[12,6,4,13,6,12]z=[12,6,4,13,6,12], to znaczy,
-# ∑i=16hzi.
-# i=1∑6​hzi​​.
 # górnoprzepustowy, okno Blackmanna
 function rozwiazanie19(;
     order::Int = 14,
@@ -505,7 +481,7 @@ function rozwiazanie19(;
     h = zeros(Float64, length(n))
 
     for i in 1:length(n)
-        h[i] += δ(i) - 2 * fg * sin(2 * π * fg * n[i]) / (2 * π * fg * n[i])
+        h[i] += δ(n[i]) - 2 * fg * sinc(2 * fg * n[i])
     end
 
     w = blackman(order / 2)
@@ -518,7 +494,7 @@ function rozwiazanie19(;
     return sum
 end
 
-# 0.03508581615202587
+# 0.03508581615202595
 rozwiazanie19()
 
 # moc sygnału          
@@ -558,10 +534,31 @@ function rozwiazanie21(;
     x::Vector{Float64} = [-4.82, -2.47, -0.28, -2.84, 2.68, 3.45, -4.19, 4.2, -1.07, -2.55, 3.56, 0.07, -1.9, -1.27, -1.25, 3.55, 0.4, 3.41, -4.67, 3.55, -3.43, -4.31, -1.09, 2.36, -4.15, 1.46, -0.69, -1.65, 3.44, 0.13, 1.09, -4.92, -2.29, 3.2, 2.41, 1.81, -0.88, -3.71, 4.75, 4.97, -3.94, 2.4, 0.51, -0.09, -4.73, -0.7, -2.34, -2.02, -0.72, -0.01, -3.79, -4.01, 4.74, -4.53, 1.35, 2.77, 3.65, -2.08, -4.1, -4.07, 2.28, 0.96, -2.05],
     h::Vector{Float64} = [-0.39, -1.52, 3.63, -0.23, -2.92, -4.16, 1.38, 4.01, -1.19, -1.04, -2.17, -4.27, -0.7, 2.32],
 )
+    function conv(x, h)
+        N = length(x)
+        M = length(h)
+        K = N + M - 1
+        y = zeros(Float64, K)
+
+        for n in 1:K
+            for m in 1:M
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
+                    y[n] += h[m] * x[n - m + 1]
+                end
+            end
+        end
+        return y
+    end
+
+    y = conv(x, h)
+    power = sum(abs.(y) .^ 2) / length(y)
+    return power
 end
 
+# 684.8232925918421
+rozwiazanie21()
+
 # 6.06.2025
-# ???
 # średnie wzmocnienie
 function rozwiazanie22(;
     b::Vector{Float64} = [0.02323724580688303, 0.002184894745921451, 0.03735705202248415, 0.014510480674151501, 0.03735705202248415, 0.002184894745921463, 0.02323724580688304],
@@ -571,20 +568,21 @@ function rozwiazanie22(;
     out = zeros(Float64, length(F))
 
     for i in 1:length(F)
-        num = 1
-        denom = 1
+        num = 0
+        denom = 0
         for n in 1:length(b)
-            num *= (1 - b[n] * exp(-2im * π * F[i]))
+            num += b[n] * exp(2im * π * F[i]) ^ -(n - 1)
         end
-        for m in 1:length(a)
-            denom *= (1 - a[m] * exp(-2im * π * F[i]))
+        for m in 2:length(a)
+            denom += a[m] * exp(2im * π * F[i]) ^ -(m - 1)
         end
-        out[i] += abs(num / denom)
+        out[i] += abs(num / (1 + denom))
     end
     mean = sum(out) / length(out)
     return mean
 end
 
+# 0.0115396393988031
 rozwiazanie22()
 
 # suma wartości sygnału g(t)          
@@ -722,22 +720,21 @@ end
 # -1.0
 rozwiazanie28()
 
-# ???
 # średnie przesunięcie fazowe
 function rozwiazanie29(;
     b::Vector{Float64} = [0.04314525874746985, -0.2588715524848191, 0.6471788812120477, -0.862905174949397, 0.6471788812120477, -0.2588715524848191, 0.04314525874746985],
     a::Vector{Float64} = [1.0, -0.38574424913684624, 1.3013655603245946, 0.13270353683808567, 0.5561248128464324, 0.17251600265356282, 0.160210615122618],
     F::Vector{Float64} = [0.15, 0.16, 0.24],
 )
-    out = zeros(ComplexF64, length(F))
+    out = zeros(Float64, length(F))
     for i in 1:length(F)
         num = 0
         denom = 0
         for m in 1:length(b)
-            num += (b[m] * exp(-2im * π * F[i]) ^ (m - 1))
+            num += b[m] * exp(2im * π * F[i]) ^ -(m - 1)
         end
         for k in 2:length(a)
-            denom += (a[k] * exp(-2im * π * F[i]) ^ (k - 1))
+            denom += a[k] * exp(2im * π * F[i]) ^ -(k - 1)
         end
         out[i] += angle(num / (1 + denom))
     end
@@ -745,7 +742,7 @@ function rozwiazanie29(;
     return mean
 end
 
-# 0.4520467406199362
+# 0.4520467406199364
 rozwiazanie29()
 
 # stabilność
@@ -834,7 +831,7 @@ function rozwiazanie33(;
 
         for n in 1:K
             for m in 1:M
-                if((n - m) > 0 && (n - m + 1) <= N)
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -847,7 +844,7 @@ function rozwiazanie33(;
     return rms
 end
 
-# 29.395120060147953
+# 29.61813597264525
 rozwiazanie33()
 
 # suma faz
@@ -856,39 +853,19 @@ function rozwiazanie34(;
     x::Vector{ComplexF64} = ComplexF64[-0.44 + 0.28im, 0.39 - 0.25im, 0.51 - 0.07im, 0.22 + 0.4im, 0.31 + 0.17im, -1.17 - 0.12im, -0.4 + 0.56im, -0.49 - 1.12im, -0.45 - 0.35im, -1.91 - 0.24im, -1.27 - 0.45im, -0.66 - 0.24im, 0.39 + 0.38im, -0.33 + 0.07im, 0.87 + 0.45im, 0.57 - 0.15im, 0.52 - 0.6im, -0.64 - 2.01im, -0.11 - 0.05im, 0.24 - 0.56im, -0.08 - 0.29im, 0.93 - 0.61im, 0.11 - 0.15im, -0.04 + 0.61im, 0.77 - 0.9im, -0.34 + 0.75im, -0.06 + 0.08im, 0.8 - 0.35im, -0.02 - 0.04im, 1.34 - 0.07im, 2.06 + 0.41im, -0.83 + 0.36im, 0.02 - 0.6im, 0.34 - 0.98im, -0.01 + 0.5im],
     f::Vector{Int} = [-357, -147, -126, 21, 63, 357],
 )
-    function dft(x)
-        N = length(x)
-        X = zeros(ComplexF64, N)
-
-        for k in 1:N
-            for n in 1:N
-                X[k] += x[n] * cispi((-2 * (n - 1) * (k - 1)) / N)
-            end
-        end
-        return X / N
-    end
-
     N = length(x)
-    Δf = fp / N
-    X = dft(x)
-    F = zeros(Float64, N)
-    F[Int(floor(N / 2) + 2)] = -(floor((N - 1) / 2)) * Δf
-
-    for i in 1:(N - 1)
-        if((i + 1) != floor(N / 2) + 2)
-            F[i + 1] += F[i] + Δf
+    sum = 0
+    for fi in f
+        X = 0
+        for n in 0:(N - 1)
+            X += x[n + 1] * exp(-2im * π * (fi / fp) * n)
         end
+        sum += angle(X / N)
     end
-    out = 0
-    for i in 1:N
-        if F[i] in f
-            out += angle(X[i])
-        end
-    end
-    return out
+    return sum
 end
 
-# 5.398019213756828
+# 5.398019213756821
 rozwiazanie34()
 
 # średnie przesunięcie fazowe          
@@ -929,7 +906,7 @@ function rozwiazanie36(;
 
         for n in 1:K
             for m in 1:M
-                if((n - m) > 0 && (n - m + 1) <= N)
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -942,7 +919,7 @@ function rozwiazanie36(;
     return rms
 end
 
-# 22.66915864568927
+# 22.75450833989356
 rozwiazanie36()
 
 # stabilność          
@@ -1027,31 +1004,31 @@ end
 # 2.2390848136478696
 rozwiazanie40()
 
-# średnie wzmocnienie  
-# ???        
-function rozwiazanie(;
+# średnie wzmocnienie       
+function rozwiazanie41(;
     zz::Vector{ComplexF64} = ComplexF64[1.0 + 0.0im, 1.0 + 0.0im, 1.0 + 0.0im, 1.0 + 0.0im, -1.0 + 0.0im, -1.0 + 0.0im, -1.0 + 0.0im, -1.0 + 0.0im],
     pp::Vector{ComplexF64} = ComplexF64[0.6629285469528505 - 0.7100526844798914im, 0.2435636816050776 + 0.9310154893083475im, 0.6629285469528505 + 0.7100526844798914im, 0.2435636816050776 - 0.9310154893083475im, 0.5394023013757923 - 0.7484372268300734im, 0.36776103583483344 + 0.8357594754616966im, 0.5394023013757923 + 0.7484372268300734im, 0.36776103583483344 - 0.8357594754616966im],
     k::Float64 = 0.0007883274129675113,
     F::Vector{Float64} = [0.14, 0.23, 0.27, 0.28, 0.3, 0.45],
 )
-    out = zeros(ComplexF64, length(F))
+    out = zeros(Float64, length(F))
     for n in 1:length(F)
-        num = 0
-        denom = 0
+        num = 1
+        denom = 1
         for z in 1:length(zz)
-            num += (zz[z] * exp(2im * π * F[n]) ^ -(z - 1))
+            num *= (1 - zz[z] * exp(-2im * π * F[n]))
         end
-        for p in 2:length(pp)
-            denom += (pp[p] * exp(2im / π * F[n]) ^ -(p - 1))
+        for p in 1:length(pp)
+            denom *= (1 - pp[p] * exp(-2im * π * F[n]))
         end
-        out[n] = (k * num) / (1 + denom)
+        out[n] = abs((k * num) / denom)
     end
-    mean = sum(abs.(out)) / length(out)
+    mean = sum(out) / length(out)
     return mean
 end
 
-rozwiazanie()
+0.16719127278457369
+rozwiazanie41()
 
 # stabilność
 function rozwiazanie42(;
@@ -1124,7 +1101,7 @@ function rozwiazanie45(;
 
         for n in 1:K
             for m in 1:M
-                if((n - m) > 0 && (n - m + 1) <= N)
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -1137,7 +1114,7 @@ function rozwiazanie45(;
     return energy 
 end
 
-# 42222.55952057001
+# 43596.972458360004
 rozwiazanie45()
 
 # stabilność
@@ -1286,7 +1263,7 @@ function rozwiazanie52(;
 
         for n in 1:K
             for m in 1:M
-                if((n - m) > 0 && (n - m + 1) <= N)
+                if((n - m + 1) > 0 && (n - m + 1) <= N)
                     y[n] += h[m] * x[n - m + 1]
                 end
             end
@@ -1299,7 +1276,7 @@ function rozwiazanie52(;
     return energy
 end
 
-# 127947.32986077995
+# 130173.77902989998
 rozwiazanie52()
 
 # energia sygnału          
